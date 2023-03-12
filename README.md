@@ -52,3 +52,21 @@ You will need the following technologies available to try it out:
 - Create functionality for export result (array) to JSON/TXT/EXCEL (Bonus).
 - Add unit tests.
 - Add Integration tests. 
+
+
+## Instructions how to run:
+
+First of all: You should create a database with name input_numbers.
+
+Execute command
+to run test ```gradle build```
+
+### Generate Allure report
+
+```mvn allure:report```
+
+### Open Allure report in browser
+
+```mvn allure:serve```
+
+**Note**: You should have installed Chrome browser, Gradle.
