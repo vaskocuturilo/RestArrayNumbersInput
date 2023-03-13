@@ -3,6 +3,7 @@ package com.example.restarraynumbersinput.controller;
 import com.example.restarraynumbersinput.entity.NumberEntity;
 import com.example.restarraynumbersinput.service.NumbersService;
 import com.example.restarraynumbersinput.service.StorageFileService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/v1/numbers")
+@Log4j2
 public class NumbersRestController {
 
     private final StorageFileService storageFileService;

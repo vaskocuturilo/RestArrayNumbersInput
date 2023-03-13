@@ -21,6 +21,9 @@ public class NumbersService {
     }
 
     public NumberEntity handleCreateNumber(NumberEntity numberEntity) {
+        if (numberEntity.getNumber() == null) {
+            throw new IllegalStateException("Not correctly format");
+        }
         return numbersRepository.save(numberEntity);
     }
 }

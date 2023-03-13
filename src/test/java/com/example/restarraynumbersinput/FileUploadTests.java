@@ -27,7 +27,6 @@ public class FileUploadTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-
     @Test
     public void whenFileUpload_thenCheckStatusIsOk() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
