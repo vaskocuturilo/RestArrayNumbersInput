@@ -1,44 +1,58 @@
-name: CI/CD Pipeline
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [ push, pull_request ]
+
+name: CI
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
-  init:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15.2
+        image: postgres
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: myPassword
-          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
-          - 5332:5432
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
-      # Setting up the Java environment
-      - uses: actions/checkout@v1
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      # Removed 'Install PSQL' step as psql comes preinstalled in the postgres Docker Hub image
+
+      - name: Test postgres connection
+        run: psql postgres://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
+
+      - name: Cargo test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+      - uses: actions/checkout@v3
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: adopt
           cache: 'gradle'
 
-      - name: Cache the Gradle packages to speed up build
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/build.gradle') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build and test project with Gradle
+      - name: Build project.
         run: gradle build
