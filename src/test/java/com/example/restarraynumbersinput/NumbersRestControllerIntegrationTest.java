@@ -11,6 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class NumbersRestControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+
     @Test
     public void givenNumbers_whenGetAllNumbers_thenStatus200() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -34,21 +39,22 @@ public class NumbersRestControllerIntegrationTest {
     public void givenNumbers_whenCreatedNumber_thenStatus200() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/numbers")
-                        .content(new ObjectMapper().writeValueAsString(new NumberEntity(200)))
+                        .content(new ObjectMapper().writeValueAsString(List.of(new NumberEntity(100), new NumberEntity(200), new NumberEntity(300))))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.number").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.number").value(200));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].number").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].number", hasItems(100, 200, 300)));
     }
 
     @Test
     public void givenNumbers_whenCreatedNumber_thenStatus400() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/numbers")
-                        .content(new ObjectMapper().writeValueAsString(new NumberEntity(null)))
+                        .content(new ObjectMapper().writeValueAsString(List.of(new NumberEntity(null))))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
