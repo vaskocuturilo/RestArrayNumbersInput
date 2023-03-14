@@ -42,7 +42,7 @@ You will need the following technologies available to try it out:
 
 ## TO-DO list (ASAP):
 
-- Create functionality for upload an array numbers form file(JSON,TXT,EXCEL).
+- Create functionality for upload an array numbers from file(JSON,TXT,EXCEL). :heavy_check_mark:
 - Create functionality for insert data to a database.
 - Create functionality for find the largest number.
 - Create functionality for find the smallest number.
@@ -50,7 +50,7 @@ You will need the following technologies available to try it out:
 - Create functionality for find the longest sequence in ascending order.
 - Create functionality for find the longest descending sequence.
 - Create functionality for export result (array) to JSON/TXT/EXCEL (Bonus).
-- Add unit tests.
+- Add unit tests. :heavy_check_mark:
 - Add Integration tests. 
 
 
