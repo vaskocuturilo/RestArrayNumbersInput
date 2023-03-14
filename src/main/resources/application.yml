@@ -6,8 +6,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: myPassword
+
   jpa:
     show-sql: true
+
+    hibernate:
+      ddl-auto: update
 
   sql:
     init:

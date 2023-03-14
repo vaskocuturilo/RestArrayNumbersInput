@@ -1,6 +1,6 @@
 package com.example.restarraynumbersinput.controller;
 
-import com.example.restarraynumbersinput.entity.NumberEntity;
+import com.example.restarraynumbersinput.model.NumberModel;
 import com.example.restarraynumbersinput.service.NumbersService;
 import com.example.restarraynumbersinput.service.StorageFileService;
 import lombok.extern.log4j.Log4j2;
@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/numbers")
@@ -33,7 +35,7 @@ public class NumbersRestController {
     }
 
     @PostMapping
-    public ResponseEntity handleCreateNumber(@RequestBody NumberEntity numberEntity, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity handleCreateNumber(@RequestBody List<NumberModel> numberEntity, UriComponentsBuilder uriComponentsBuilder) {
         try {
             return ResponseEntity.created(uriComponentsBuilder
                             .path("/api/v1/numbers")
@@ -47,7 +49,7 @@ public class NumbersRestController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile multipartFile) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         try {
             storageFileService.init();
             storageFileService.saveFile(multipartFile);
