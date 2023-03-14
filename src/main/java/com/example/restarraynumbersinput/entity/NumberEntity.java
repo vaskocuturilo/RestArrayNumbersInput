@@ -17,6 +17,7 @@ public class NumberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer number;
+
     public NumberEntity(Integer number) {
         this.number = number;
     }
