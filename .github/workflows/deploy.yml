@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  gradle:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+
+    services:
+      # mysql-service Label used to access the service container
+      mysql-service:
+        # Docker Hub image (also with version)
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # Install the Java.
+      - uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: adopt
+          cache: 'gradle'
+
+      - run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
+
+        # Run uit tests.
+      - name: Setup and execute Gradle 'test' task
+        run: gradle test
