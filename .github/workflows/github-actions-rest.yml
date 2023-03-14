@@ -5,28 +5,10 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    paths:
-      - backend/**
+
 jobs:
   init:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15.2
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: myPassword
-          POSTGRES_DB: postgres
-        ports:
-          - 5332:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      defaults:
-        run:
-          working-directory: ./backend
     steps:
       # Setting up the Java environment
       - uses: actions/checkout@v3
@@ -35,8 +17,14 @@ jobs:
         with:
           java-version: '17'
           distribution: adopt
-          cache: 'gradle'
+          cache: 'maven'
 
+      - name: Cache the Gradle packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/build.gradle') }}
+          restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and test project with Maven
+      - name: Build and test project with Gradle
         run: gradle build
