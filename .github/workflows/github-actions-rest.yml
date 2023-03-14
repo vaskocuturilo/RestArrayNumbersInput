@@ -40,4 +40,4 @@ jobs:
 
         # Run uit tests.
       - name: Build and run Unit/Integration Tests with Gradle
-        run: gradle test
+        run: gradle tests status is ${{ job.status }}."
