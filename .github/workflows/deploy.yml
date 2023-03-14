@@ -6,40 +6,38 @@ on:
   pull_request:
     branches: [ main ]
 
+    paths:
+      - backend/**
 jobs:
-  gradle:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-    runs-on: ${{ matrix.os }}
-
+  build:
+    runs-on: ubuntu-latest
     services:
-      # mysql-service Label used to access the service container
-      mysql-service:
-        # Docker Hub image (also with version)
-        image: postgres
+      postgres:
+        image: postgres:14.1
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: amigoscode
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: customer
+        ports:
+          - 5332:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
-      # Install the Java.
       - uses: actions/checkout@v3
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: '17'
-          distribution: adopt
           cache: 'gradle'
 
-      - run: |
-          apt-get update
-          apt-get install --yes --no-install-recommends postgresql-client
-
         # Run uit tests.
-      - name: Setup and execute Gradle 'test' task
+      - name: Build and run Unit/Integration Tests with Gradle
         run: gradle test
