@@ -34,6 +34,25 @@ public class NumbersRestController {
         }
     }
 
+    @DeleteMapping("/all")
+    public ResponseEntity handleDeleteAllNumbers() {
+        try {
+            numbersService.handleDeleteAllNumbers();
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("All numbers was delete.");
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/operations")
+    public ResponseEntity handleGetOperationsNumber() {
+        try {
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(numbersService.handleGetOperationsNumber());
+        } catch (Exception exception) {
+            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(exception.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity handleCreateNumber(@RequestBody List<NumberModel> numberEntity, UriComponentsBuilder uriComponentsBuilder) {
         try {
