@@ -61,6 +61,9 @@ First of all: You should create a database with name input_numbers.
 Execute command
 to run test ```gradle build```
 
+## Swagger-ui:
+http://localhost:8080/swagger-ui/index.html
+
 ### Generate Allure report
 
 ```mvn allure:report```
