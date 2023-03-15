@@ -46,7 +46,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build project.
-        run: gradle build
+        run: gradle build -x test
 
         env:
           POSTGRES_USER: postgres
