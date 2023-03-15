@@ -63,7 +63,7 @@ to run test ```gradle build```
 
 ## Swagger-ui:
 http://localhost:8080/swagger-ui/index.html
-![](https://files.fm/u/9b6bt95gm?ak=61ee4)
+![](https://i.postimg.cc/gJZxhsZv/593c34ec-dbd6-476b-b9e5-b911d672d28c.png)
 
 ### Generate Allure report
 
