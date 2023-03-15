@@ -63,13 +63,14 @@ to run test ```gradle build```
 
 ## Swagger-ui:
 http://localhost:8080/swagger-ui/index.html
+![](https://files.fm/u/9b6bt95gm?ak=61ee4)
 
 ### Generate Allure report
 
-```mvn allure:report```
+```gradle allure:report```
 
 ### Open Allure report in browser
 
-```mvn allure:serve```
+```gradle allure:serve```
 
 **Note**: You should have installed Chrome browser, Gradle.
