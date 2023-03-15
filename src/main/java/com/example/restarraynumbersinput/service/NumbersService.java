@@ -25,6 +25,11 @@ public class NumbersService {
     }
 
     public Iterable<NumberEntity> handleCreateNumber(List<NumberModel> numberModels) {
+        for (NumberModel model : numberModels) {
+            if (model.getNumber() == null) {
+                throw new IllegalStateException("Not correctly format");
+            }
+        }
         List<NumberEntity> numberEntities = new ArrayList<>();
         for (NumberModel numberModel : numberModels) {
             numberEntities.add(dtoToEntity(numberModel));

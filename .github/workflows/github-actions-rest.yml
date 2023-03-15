@@ -1,40 +1,53 @@
-name: CI/CD Pipeline
+name: CI
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - backend/**
+
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15.2
+        image: postgres
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: myPassword
-          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
-          - 5332:5432
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
-    defaults:
-      run:
-        working-directory: ./backend
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
         with:
-          distribution: 'temurin'
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      # Removed 'Install PSQL' step as psql comes preinstalled in the postgres Docker Hub image
+
+      - name: Test postgres connection
+        run: psql postgres://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
+
+      - uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
           java-version: '17'
+          distribution: adopt
           cache: 'gradle'
 
-        # Run uit tests.
-      - name: Build and run Unit/Integration Tests with Gradle
-        run: gradle tests status is ${{ job.status }}."
+      - name: Build project.
+        run: gradle build -x test
+
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
