@@ -46,6 +46,7 @@ You will need the following technologies available to try it out:
 - Create functionality for insert data to a database. 
 - Create functionality for find the largest number. :heavy_check_mark:
 - Create functionality for find the smallest number. :heavy_check_mark:
+- Create functionality for find the median. :heavy_check_mark:
 - Create functionality for find the average number. :heavy_check_mark:
 - Create functionality for find the longest sequence in ascending order.
 - Create functionality for find the longest descending sequence.
