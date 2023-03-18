@@ -6,7 +6,10 @@ import com.example.restarraynumbersinput.repository.NumbersRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.DoubleStream;
 
 import static com.example.restarraynumbersinput.model.NumberModel.dtoToEntity;
 
@@ -29,11 +32,12 @@ public class NumbersService {
             throw new RuntimeException("The list of numbers is Empty. Add List of numbers before, please.");
         }
 
-        Integer smallest = entityList.stream().mapToInt(version -> version.getNumber()).min().orElseThrow(NoSuchElementException::new);
-        Integer largest = entityList.stream().mapToInt(version -> version.getNumber()).max().orElseThrow(NoSuchElementException::new);
-        Integer average = (int) entityList.stream().mapToInt(version -> version.getNumber()).average().orElseThrow(NoSuchElementException::new);
+        Integer smallestNumber = entityList.stream().mapToInt(version -> version.getNumber()).min().orElseThrow(NoSuchElementException::new);
+        Integer largestNumber = entityList.stream().mapToInt(version -> version.getNumber()).max().orElseThrow(NoSuchElementException::new);
+        Integer averageNumber = (int) entityList.stream().mapToInt(version -> version.getNumber()).average().orElseThrow(NoSuchElementException::new);
+        Integer medianNumber = getMedianNumber(entityList);
 
-        return List.of(smallest, largest, average);
+        return List.of(smallestNumber, largestNumber, averageNumber, medianNumber);
     }
 
     public Iterable<NumberEntity> handleCreateNumber(List<NumberModel> numberModels) {
@@ -52,5 +56,15 @@ public class NumbersService {
 
     public void handleDeleteAllNumbers() {
         numbersRepository.deleteAll();
+    }
+
+    private static Integer getMedianNumber(List<NumberEntity> entityList) {
+        DoubleStream doubleStream = entityList.stream().mapToDouble(NumberEntity::getNumber).sorted();
+
+        double result = entityList.size() % 2 == 0 ?
+                doubleStream.skip(entityList.size() / 2 - 1).limit(2).average().getAsDouble() :
+                doubleStream.skip(entityList.size() / 2).findFirst().getAsDouble();
+
+        return (int) result;
     }
 }
