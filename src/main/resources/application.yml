@@ -16,3 +16,7 @@ spring:
   sql:
     init:
       mode: always
+  http:
+    multipart:
+      max-file-size: 100KB
+      max-request-size: 100KB

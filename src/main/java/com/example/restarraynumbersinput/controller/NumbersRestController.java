@@ -3,6 +3,8 @@ package com.example.restarraynumbersinput.controller;
 import com.example.restarraynumbersinput.model.NumberModel;
 import com.example.restarraynumbersinput.service.NumbersService;
 import com.example.restarraynumbersinput.service.StorageFileService;
+import com.example.restarraynumbersinput.service.UploadServiceImplementation;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/numbers")
 @Log4j2
+@AllArgsConstructor
 public class NumbersRestController {
 
     private final StorageFileService storageFileService;
     private final NumbersService numbersService;
-
-    public NumbersRestController(StorageFileService storageFileService, NumbersService numbersService) {
-        this.storageFileService = storageFileService;
-        this.numbersService = numbersService;
-    }
+    private final UploadServiceImplementation uploadServiceImplementation;
 
     @GetMapping("/all")
     public ResponseEntity handleGetAllNumbers() {
@@ -70,12 +69,14 @@ public class NumbersRestController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         try {
+            storageFileService.deleteAll();
             storageFileService.init();
             storageFileService.saveFile(multipartFile);
+            uploadServiceImplementation.uploadFile(multipartFile);
             String message = "Uploaded the file successfully: " + multipartFile.getOriginalFilename();
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("File upload -> " + message);
         } catch (Exception exception) {
-            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("File didn't upload.");
+            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("File didn't upload." + exception.getMessage());
         }
     }
 }

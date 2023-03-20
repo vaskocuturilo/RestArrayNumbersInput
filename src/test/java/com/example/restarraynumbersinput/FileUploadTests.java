@@ -12,6 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FileUploadTests {
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private StorageFileService storageFileService;
     @Autowired
@@ -31,9 +33,9 @@ public class FileUploadTests {
     public void whenFileUpload_thenCheckStatusIsOk() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "file",
-                "upload.txt",
+                "upload.json",
                 MediaType.TEXT_PLAIN_VALUE,
-                "Test upload file".getBytes());
+                Files.readAllBytes(Paths.get("src/main/resources/upload.json")));
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(multipart("/api/v1/numbers/upload").file(mockMultipartFile))
