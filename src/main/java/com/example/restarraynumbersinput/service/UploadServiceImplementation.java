@@ -20,7 +20,7 @@ import java.util.List;
 public class UploadServiceImplementation implements UploadService {
     private final NumbersService numbersService;
 
-    private final static String PATH = "upload-folder/";
+    private static final String PATH = "upload-folder/";
 
     @Override
     public void uploadFile(MultipartFile multipartFile) {
@@ -30,11 +30,11 @@ public class UploadServiceImplementation implements UploadService {
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(PATH + multipartFile.getOriginalFilename());
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException exception) {
             if (log.isDebugEnabled()) {
-                log.debug("Log Message -> : Class UploadServiceImplementation, method upload. File not found.", e.getMessage());
+                log.debug("Log Message -> : Class UploadServiceImplementation, method upload. File not found.", exception.getMessage());
             }
-            throw new RuntimeException(e);
+            throw new IllegalStateException(exception);
         }
         try {
             List<NumberModel> numberEntities = mapper.readValue(inputStream, typeReference);
@@ -44,7 +44,7 @@ public class UploadServiceImplementation implements UploadService {
             if (log.isDebugEnabled()) {
                 log.debug("Log Message -> : Class UploadServiceImplementation, method upload is down.", exception.getMessage());
             }
-            throw new RuntimeException(exception.getMessage());
+            throw new IllegalStateException(exception.getMessage());
         }
     }
 }
