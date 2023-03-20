@@ -43,7 +43,7 @@ You will need the following technologies available to try it out:
 ## TO-DO list (ASAP):
 
 - Create functionality for upload an array numbers from file(JSON,TXT,EXCEL). :heavy_check_mark:
-- Create functionality for insert data to a database. 
+- Create functionality for insert data to a database. :heavy_check_mark: 
 - Create functionality for find the largest number. :heavy_check_mark:
 - Create functionality for find the smallest number. :heavy_check_mark:
 - Create functionality for find the median. :heavy_check_mark:
