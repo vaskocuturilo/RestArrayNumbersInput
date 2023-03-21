@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.DoubleStream;
@@ -29,15 +30,16 @@ public class NumbersService {
     public List<Integer> handleGetOperationsNumber() {
         List<NumberEntity> entityList = numbersRepository.findAll();
         if (entityList.isEmpty()) {
-            throw new RuntimeException("The list of numbers is Empty. Add List of numbers before, please.");
+            throw new IllegalStateException("The list of numbers is Empty. Add List of numbers before, please.");
         }
 
         Integer smallestNumber = entityList.stream().mapToInt(version -> version.getNumber()).min().orElseThrow(NoSuchElementException::new);
         Integer largestNumber = entityList.stream().mapToInt(version -> version.getNumber()).max().orElseThrow(NoSuchElementException::new);
         Integer averageNumber = (int) entityList.stream().mapToInt(version -> version.getNumber()).average().orElseThrow(NoSuchElementException::new);
         Integer medianNumber = getMedianNumber(entityList);
+        Integer longestSequenceAsc = longestSequenseByAsc(entityList);
 
-        return List.of(smallestNumber, largestNumber, averageNumber, medianNumber);
+        return List.of(smallestNumber, largestNumber, averageNumber, medianNumber, longestSequenceAsc);
     }
 
     public Iterable<NumberEntity> handleCreateNumber(List<NumberModel> numberModels) {
@@ -66,5 +68,29 @@ public class NumbersService {
                 doubleStream.skip(entityList.size() / 2).findFirst().getAsDouble();
 
         return (int) result;
+    }
+
+    public static Integer longestSequenseByAsc(List<NumberEntity> entityList) {
+        Integer[] array = entityList.stream()
+                .map(NumberEntity::getNumber)
+                .toArray(Integer[]::new);
+
+        final HashSet<Integer> hashSet = new HashSet<>();
+        for (int i : array) hashSet.add(i);
+
+        int longestSequenceLen = 0;
+        for (int i : array) {
+            int length = 1;
+            for (int j = i - 1; hashSet.contains(j); --j) {
+                hashSet.remove(j);
+                ++length;
+            }
+            for (int j = i + 1; hashSet.contains(j); ++j) {
+                hashSet.remove(j);
+                ++length;
+            }
+            longestSequenceLen = Math.max(longestSequenceLen, length);
+        }
+        return longestSequenceLen;
     }
 }
