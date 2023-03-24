@@ -37,9 +37,10 @@ public class NumbersService {
         Integer largestNumber = entityList.stream().mapToInt(version -> version.getNumber()).max().orElseThrow(NoSuchElementException::new);
         Integer averageNumber = (int) entityList.stream().mapToInt(version -> version.getNumber()).average().orElseThrow(NoSuchElementException::new);
         Integer medianNumber = getMedianNumber(entityList);
-        Integer longestSequenceAsc = longestSequenseByAsc(entityList);
+        Integer longestSequenceAsc = longestSequenceByAsc(entityList);
+        Integer longestSequenceDesc = longestSequenceByDesc(entityList);
 
-        return List.of(smallestNumber, largestNumber, averageNumber, medianNumber, longestSequenceAsc);
+        return List.of(smallestNumber, largestNumber, averageNumber, medianNumber, longestSequenceAsc, longestSequenceDesc);
     }
 
     public Iterable<NumberEntity> handleCreateNumber(List<NumberModel> numberModels) {
@@ -70,7 +71,7 @@ public class NumbersService {
         return (int) result;
     }
 
-    public static Integer longestSequenseByAsc(List<NumberEntity> entityList) {
+    public static Integer longestSequenceByAsc(List<NumberEntity> entityList) {
         Integer[] array = entityList.stream()
                 .map(NumberEntity::getNumber)
                 .toArray(Integer[]::new);
@@ -92,5 +93,25 @@ public class NumbersService {
             longestSequenceLen = Math.max(longestSequenceLen, length);
         }
         return longestSequenceLen;
+    }
+
+    public static Integer longestSequenceByDesc(List<NumberEntity> entityList) {
+        Integer[] array = entityList.stream()
+                .map(NumberEntity::getNumber)
+                .toArray(Integer[]::new);
+
+        int downSequence = 1;
+        int longestDownSequence = 1;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] <= array[i - 1]) downSequence++;
+            else {
+                if (downSequence > longestDownSequence)
+                    longestDownSequence = downSequence;
+                downSequence = 1;
+            }
+        }
+        if (downSequence > longestDownSequence)
+            longestDownSequence = downSequence;
+        return longestDownSequence;
     }
 }
