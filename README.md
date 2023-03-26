@@ -49,10 +49,10 @@ You will need the following technologies available to try it out:
 - Create functionality for find the median. :heavy_check_mark:
 - Create functionality for find the average number. :heavy_check_mark:
 - Create functionality for find the longest sequence in ascending order. :heavy_check_mark:
-- Create functionality for find the longest descending sequence.
+- Create functionality for find the longest descending sequence. :heavy_check_mark:
 - Create functionality for export result (array) to JSON/TXT/EXCEL (Bonus).
 - Add unit tests. :heavy_check_mark:
-- Add Integration tests. 
+- Add Integration tests. :heavy_check_mark:
 
 
 ## Instructions how to run:
