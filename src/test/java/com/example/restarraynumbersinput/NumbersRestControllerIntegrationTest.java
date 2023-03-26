@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class NumbersRestControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
-
     @Test
     public void givenNumbers_whenCreatedNumber_thenStatus200() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -63,10 +62,13 @@ public class NumbersRestControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*]").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*]").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasSize(6)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(300)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(200)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(200)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(200)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*]", hasItem(1)));
     }
 
     @Test

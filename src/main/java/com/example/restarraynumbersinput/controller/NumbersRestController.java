@@ -69,8 +69,6 @@ public class NumbersRestController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         try {
-            storageFileService.deleteAll();
-            storageFileService.init();
             storageFileService.saveFile(multipartFile);
             uploadServiceImplementation.uploadFile(multipartFile);
             String message = "Uploaded the file successfully: " + multipartFile.getOriginalFilename();
