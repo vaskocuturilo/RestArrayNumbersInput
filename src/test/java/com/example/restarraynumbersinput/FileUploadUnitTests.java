@@ -8,9 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.event.annotation.BeforeTestMethod;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,8 +26,11 @@ public class FileUploadUnitTests {
     private MockMvc mockMvc;
     @MockBean
     private StorageFileService storageFileService;
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+
+    @BeforeTestMethod
+    public void init() {
+        storageFileService.init();
+    }
 
     @Test
     public void whenFileUpload_thenCheckStatusIsOk() throws Exception {
@@ -38,7 +40,6 @@ public class FileUploadUnitTests {
                 MediaType.TEXT_PLAIN_VALUE,
                 Files.readAllBytes(Paths.get("src/main/resources/upload.json")));
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(multipart("/api/v1/numbers/upload").file(mockMultipartFile))
                 .andExpect(status().isOk())
                 .andExpect(content().string("File upload -> Uploaded the file successfully: upload.json"));
@@ -54,7 +55,6 @@ public class FileUploadUnitTests {
                 MediaType.APPLICATION_JSON_VALUE,
                 Files.readAllBytes(Paths.get("src/main/resources/error.json")));
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(multipart("/api/v1/numbers/upload").file(mockMultipartFile))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("File didn't upload.Unrecognized field \"number1\" (class com.example.restarraynumbersinput.model.NumberModel), not marked as ignorable (2 known properties: \"number\", \"id\"])\n" +
