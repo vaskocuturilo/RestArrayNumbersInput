@@ -1,11 +1,13 @@
 package com.example.restarraynumbersinput.service;
 
+import com.example.restarraynumbersinput.helper.ExportHelper;
 import com.example.restarraynumbersinput.entity.NumberEntity;
 import com.example.restarraynumbersinput.model.NumberModel;
 import com.example.restarraynumbersinput.repository.NumbersRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,9 +35,9 @@ public class NumbersService {
             throw new IllegalStateException("The list of numbers is Empty. Add List of numbers before, please.");
         }
 
-        Integer smallestNumber = entityList.stream().mapToInt(version -> version.getNumber()).min().orElseThrow(NoSuchElementException::new);
-        Integer largestNumber = entityList.stream().mapToInt(version -> version.getNumber()).max().orElseThrow(NoSuchElementException::new);
-        Integer averageNumber = (int) entityList.stream().mapToInt(version -> version.getNumber()).average().orElseThrow(NoSuchElementException::new);
+        Integer smallestNumber = entityList.stream().mapToInt(NumberEntity::getNumber).min().orElseThrow(NoSuchElementException::new);
+        Integer largestNumber = entityList.stream().mapToInt(NumberEntity::getNumber).max().orElseThrow(NoSuchElementException::new);
+        Integer averageNumber = (int) entityList.stream().mapToInt(NumberEntity::getNumber).average().orElseThrow(NoSuchElementException::new);
         Integer medianNumber = getMedianNumber(entityList);
         Integer longestSequenceAsc = longestSequenceByAsc(entityList);
         Integer longestSequenceDesc = longestSequenceByDesc(entityList);
@@ -61,6 +63,12 @@ public class NumbersService {
         numbersRepository.deleteAll();
     }
 
+    public ByteArrayInputStream writeEmployeesToCsv() {
+        List<NumberEntity> numberEntities = numbersRepository.findAll();
+
+        return ExportHelper.exportDataFromDatabaseToCSV(numberEntities);
+    }
+
     private static Integer getMedianNumber(List<NumberEntity> entityList) {
         DoubleStream doubleStream = entityList.stream().mapToDouble(NumberEntity::getNumber).sorted();
 
@@ -71,7 +79,7 @@ public class NumbersService {
         return (int) result;
     }
 
-    public static Integer longestSequenceByAsc(List<NumberEntity> entityList) {
+    private static Integer longestSequenceByAsc(List<NumberEntity> entityList) {
         Integer[] array = entityList.stream()
                 .map(NumberEntity::getNumber)
                 .toArray(Integer[]::new);
@@ -95,7 +103,7 @@ public class NumbersService {
         return longestSequenceLen;
     }
 
-    public static Integer longestSequenceByDesc(List<NumberEntity> entityList) {
+    private static Integer longestSequenceByDesc(List<NumberEntity> entityList) {
         Integer[] array = entityList.stream()
                 .map(NumberEntity::getNumber)
                 .toArray(Integer[]::new);
