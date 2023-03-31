@@ -6,12 +6,15 @@ import com.example.restarraynumbersinput.service.StorageFileService;
 import com.example.restarraynumbersinput.service.UploadServiceImplementation;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -78,5 +81,13 @@ public class NumbersRestController {
         } catch (Exception exception) {
             return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body("File didn't upload." + exception.getMessage());
         }
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<InputStreamResource> getAllEmployeesInCsv() {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + new Date().getTime() + ".csv")
+                .contentType(MediaType.parseMediaType("application/csv"))
+                .body(new InputStreamResource(numbersService.writeEmployeesToCsv()));
     }
 }
