@@ -38,6 +38,7 @@ You will need the following technologies available to try it out:
 * Gradle 7+
 * JDK 17
 * Docker
+* Rest Assured
 * IDE of your choice
 
 ## TO-DO list (ASAP):
@@ -53,6 +54,7 @@ You will need the following technologies available to try it out:
 - Create functionality for export result (array) to JSON/TXT/EXCEL :heavy_check_mark:
 - Add unit tests. :heavy_check_mark:
 - Add Integration tests. :heavy_check_mark:
+- Add API tests.
 
 
 ## Instructions how to run:
